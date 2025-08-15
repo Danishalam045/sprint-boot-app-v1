@@ -71,7 +71,7 @@ pipeline {
             steps {
                 sh '''
                     echo "=== Deploying to Kubernetes ==="
-                    kubectl apply -f k8s/deployment.yaml
+                    kubectl apply -f /deployment.yaml
                 '''
             }
         }
