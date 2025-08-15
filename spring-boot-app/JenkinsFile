@@ -9,7 +9,7 @@ pipeline {
     stage('Checkout') {
       steps {
         sh 'echo passed'
-        //git branch: 'main', url: 'https://github.com/Danishalam045/sprint-boot-app-v1.git'
+        git branch: 'main', url: 'https://github.com/Danishalam045/sprint-boot-app-v1.git'
       }
     }
     stage('Build and Test') {
