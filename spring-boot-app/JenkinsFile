@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_USER = credentials('dockerhub-user')
+        DOCKER_USER = credentials('dockerhub-user') // DockerHub username/password
         DOCKER_IMAGE = "danish045/ultimate-cicd"
     }
 
@@ -63,7 +63,7 @@ pipeline {
             agent {
                 docker {
                     image 'bitnami/kubectl:latest'
-                    args '-v /home/jenkins/jenkins-kubeconfig/config:/root/.kube/config:ro --entrypoint="" --user root'
+                    args '-v /home/jenkins/jenkins-kubeconfig:/root/.kube:ro --entrypoint=""'
                 }
             }
             environment {
