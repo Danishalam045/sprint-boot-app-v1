@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_USER = credentials('dockerhub-user') // DockerHub username/password from Jenkins credentials
+        DOCKER_USER = credentials('dockerhub-user')
         DOCKER_IMAGE = "danish045/ultimate-cicd"
     }
 
@@ -16,13 +16,11 @@ pipeline {
 
         stage('Build with Maven') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-user', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh '''
-                        echo "=== Building with Maven ==="
-                        cd spring-boot-app
-                        mvn clean install -DskipTests
-                    '''
-                }
+                sh '''
+                    echo "=== Building with Maven ==="
+                    cd spring-boot-app
+                    mvn clean install -DskipTests
+                '''
             }
         }
 
@@ -43,12 +41,6 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-user', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh '''
                         echo "=== Building Docker Image ==="
-
-                        if ! command -v docker >/dev/null 2>&1; then
-                            echo "ERROR: Docker not found on Jenkins agent."
-                            exit 1
-                        fi
-
                         cd spring-boot-app
                         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                         docker build -t $DOCKER_IMAGE:${BUILD_NUMBER} .
@@ -68,6 +60,12 @@ pipeline {
         }
 
         stage('Deploy to Kubernetes') {
+            agent {
+                docker {
+                    image 'bitnami/kubectl:latest'  // Docker image with kubectl
+                    args '-v /home/jenkins/jenkins-kubeconfig:/root/.kube/config' // Mount your kubeconfig
+                }
+            }
             steps {
                 sh '''
                     echo "=== Deploying to Kubernetes ==="
