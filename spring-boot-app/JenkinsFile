@@ -63,10 +63,12 @@ pipeline {
             agent {
                 docker {
                     image 'bitnami/kubectl:latest'
-                    args '-v /home/jenkins/jenkins-kubeconfig:/root/.kube:ro --entrypoint=""'
+                    // Mount the actual Minikube kubeconfig from ubuntu home
+                    args "-v /home/ubuntu/.kube:/root/.kube:ro --entrypoint=''"
                 }
             }
             environment {
+                // This points kubectl to the mounted config inside the container
                 KUBECONFIG = '/root/.kube/config'
             }
             steps {
