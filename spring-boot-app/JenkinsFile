@@ -65,7 +65,9 @@ pipeline {
                     image 'bitnami/kubectl:latest'  // Docker image with kubectl
                     args '-v /home/jenkins/jenkins-kubeconfig:/root/.kube/config --entrypoint=""' // Mount your kubeconfig
                 }
-            }
+            }environment {
+        KUBECONFIG = '/root/.kube/config'         // ensure kubectl reads the correct kubeconfig
+    }
             steps {
                 sh '''
                     echo "=== Deploying to Kubernetes ==="
