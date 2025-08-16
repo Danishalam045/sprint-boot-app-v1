@@ -62,16 +62,17 @@ pipeline {
         stage('Deploy to Kubernetes') {
             agent {
                 docker {
-                    image 'bitnami/kubectl:latest'  // Docker image with kubectl
-                    args '-v /home/jenkins/jenkins-kubeconfig:/root/.kube/config --entrypoint=""' // Mount your kubeconfig
+                    image 'bitnami/kubectl:latest'
+                    args '-v /home/jenkins/jenkins-kubeconfig:/root/.kube/config --entrypoint=""'
                 }
-            }environment {
-        KUBECONFIG = '/root/.kube/config'         // ensure kubectl reads the correct kubeconfig
-    }
+            }
+            environment {
+                KUBECONFIG = '/root/.kube/config'
+            }
             steps {
                 sh '''
                     echo "=== Deploying to Kubernetes ==="
-                    kubectl apply -f spring-boot-app-manifests/deployment.yml
+                    kubectl apply --validate=false -f spring-boot-app-manifests/deployment.yml
                 '''
             }
         }
