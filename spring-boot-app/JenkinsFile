@@ -63,7 +63,7 @@ pipeline {
             agent {
                 docker {
                     image 'bitnami/kubectl:latest'
-                    args '-v /home/jenkins/jenkins-kubeconfig:/root/.kube/config --entrypoint=""'
+                    args '-v /home/jenkins/jenkins-kubeconfig/config:/root/.kube/config --entrypoint=""'
                 }
             }
             environment {
