@@ -63,7 +63,7 @@ pipeline {
             agent {
                 docker {
                     image 'bitnami/kubectl:latest'  // Docker image with kubectl
-                    args '-v /home/jenkins/jenkins-kubeconfig:/root/.kube/config' // Mount your kubeconfig
+                    args '-v /home/jenkins/jenkins-kubeconfig:/root/.kube/config --entrypoint=""' // Mount your kubeconfig
                 }
             }
             steps {
